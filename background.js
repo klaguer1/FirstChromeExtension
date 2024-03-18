@@ -1,11 +1,15 @@
-chrome.tabs.onUpdated.addListener((tabId, tab) => {
-  if(tab.url && tab.url.includes("youtube.com/watch")) { 
-    const queryParameters = tab.url.split("?")[1]; 
-    const urlParameters = new URLSearchParams(queryParameters);  
-
-
-    chrome.tabs.sendMessage(tabId, { type: "NEW", videoId: urlParameters.get("v")})
-
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+  // Check if the updated tab has a URL
+  if (tab.url) {
+    if (tab.url.includes("google.com/search")) {
+      // Handle Google searches - You can perform actions specific to Google searches here
+      // For example, extract search query or perform some specific logic
+      const queryParameters = tab.url.split("?")[1];
+      const urlParameters = new URLSearchParams(queryParameters);
+      chrome.tabs.sendMessage(tab.id, {
+        type: "GOOGLE_SEARCH",
+        searchText: urlParameters.get("q"),
+      });
+    }
   }
-})
-  
+});
